@@ -1,6 +1,7 @@
 import { Box, Button, Typography } from "@mui/material";
+import { NextLinkComposed } from "./Link";
 
-export default function PortalAction({ title, desc, btnText }: { title: string; desc: string; btnText: string; }) {
+export default function PortalAction({ title, desc, btnText, href }: { title: string; desc: string; btnText: string; href: string; }) {
   return (
     <Box
       display="flex"
@@ -17,7 +18,7 @@ export default function PortalAction({ title, desc, btnText }: { title: string; 
       <Typography variant="body1" textAlign="center" px={7} mb={1}>
         {desc}
       </Typography>
-      <Button type="secondary" href="/">
+      <Button component={NextLinkComposed} type="secondary" to={href}>
         {btnText}
       </Button>
     </Box>

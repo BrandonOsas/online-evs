@@ -19,21 +19,25 @@ export default function Portal() {
           title="Voter Registration"
           desc="To be eligible to vote, create an account to fully register as a voter."
           btnText="Register"
+          href="/voter-registration"
         />
         <PortalAction
           title="Voting"
           desc="During any election in your unit, follow the link to cast your vote."
           btnText="Vote for a candidate"
+          href="/voting"
         />
         <PortalAction
           title="Election Results"
           desc="Click the button below to view Election results"
           btnText="View"
+          href="/election-results"
         />
         <PortalAction
           title="Information Center"
           desc="Read FAQs and get answers to questions about election procedures on election day. Stay informed because each of us is responsible for the governace of the country."
           btnText="Read Articles"
+          href="/information-center"
         />
       </Box>
     </Box>

@@ -10,6 +10,7 @@ import {
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
+import { NextLinkComposed } from "@/components/Link";
 
 export default function Home() {
   const [age, setAge] = useState<string>("");
@@ -55,7 +56,7 @@ export default function Home() {
               </Select>
             </FormControl>
 
-            <Button variant="contained">Go to Portal</Button>
+            <Button component={NextLinkComposed} variant="contained" to="/portal">Go to Portal</Button>
           </Box>
         </Box>
       </Box>
