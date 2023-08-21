@@ -44,6 +44,8 @@ export default function Stats({ title }: StatsProps) {
     <Box>
       <Typography variant="h6">{electionTitle.toUpperCase()}</Typography>
 
+      <Typography variant="subtitle2">Total votes casted: {totalVotes.toLocaleString()}</Typography>
+
       <Box display="flex" justifyContent="center" gap={6} py={3}>
         {liveResults.map((candidate, index) => {
           const candidateVotePercentage = calcPercentages(
