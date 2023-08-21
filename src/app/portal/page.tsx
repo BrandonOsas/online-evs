@@ -1,4 +1,4 @@
-import PortalAction from "@/components/PortalAction";
+import PortalAction from "@/app/portal/PortalAction";
 import { Box, Divider, Typography } from "@mui/material";
 
 export default function Portal() {

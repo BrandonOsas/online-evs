@@ -5,31 +5,17 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import PersonalData from "./form/VoterInformation";
-import Biometrics from "./form/Biometrics";
-import Review from "./form/Review";
-import VoterInformation from "./form/VoterInformation";
+import Biometrics from "./Biometrics";
+import Review from "./Review";
+import VoterInformation from "./VoterInformation";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { handleReset } from "@/redux/features/stepper";
+import { NextLinkComposed } from "../../../components/Link";
 
-const steps = [
-  "Voter Information",
-  "Biometrics Identification",
-  "Review",
-];
-
-export default function HorizontalLinearStepper() {
-  const [activeStep, setActiveStep] = React.useState(0);
-
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-  };
+export default function FormStepper() {
+  const activeStep = useAppSelector((state) => state.stepper.activeStep);
+  const steps = useAppSelector((state) => state.stepper.steps);
+  const dispatch = useAppDispatch();
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -62,7 +48,9 @@ export default function HorizontalLinearStepper() {
           </Typography>
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleReset}>Reset</Button>
+            <Button component={NextLinkComposed} to="/portal">
+              Return to Portal
+            </Button>
           </Box>
         </React.Fragment>
       )}
@@ -72,21 +60,6 @@ export default function HorizontalLinearStepper() {
           {activeStep === 0 && <VoterInformation />}
           {activeStep === 1 && <Biometrics />}
           {activeStep === 2 && <Review />}
-
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Button
-              color="inherit"
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              sx={{ mr: 1 }}
-            >
-              Back
-            </Button>
-            <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleNext}>
-              {activeStep === steps.length - 1 ? "Finish" : "Next"}
-            </Button>
-          </Box>
         </React.Fragment>
       )}
     </Box>

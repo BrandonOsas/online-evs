@@ -61,7 +61,7 @@ export default function PollingUnit({ formik }: any) {
               onBlur={formik.handleBlur}
             />
             {formik.touched.regarea && formik.errors.regarea && (
-              <FormHelperText>{formik.errors.regarea}</FormHelperText>
+              <FormHelperText error>{formik.errors.regarea}</FormHelperText>
             )}
           </FormControl>
         </Box>
@@ -77,7 +77,7 @@ export default function PollingUnit({ formik }: any) {
             onBlur={formik.handleBlur}
           />
           {formik.touched.pu && formik.errors.pu && (
-            <FormHelperText>{formik.errors.pu}</FormHelperText>
+            <FormHelperText error>{formik.errors.pu}</FormHelperText>
           )}
         </FormControl>
       </Box>

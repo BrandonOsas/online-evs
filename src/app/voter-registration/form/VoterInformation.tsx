@@ -1,9 +1,13 @@
 "use client";
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { Box } from "@mui/material";
 import PersonalData from "./PersonalData";
 import PollingUnit from "./PollingUnit";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { handleNext, setFormValidity } from "@/redux/features/stepper";
+import FormStructure from "./FormStructure";
+import { saveData } from "@/redux/features/account";
+
 
 const initialValues = {
   firstname: "",
@@ -45,18 +49,28 @@ const validationSchema = yup.object({
 });
 
 export default function VoterInformation() {
+  const data = useAppSelector(state => state.account.data)
+  const dispatch = useAppDispatch();
+
   const formik = useFormik({
-    initialValues,
+    initialValues: data ? data : initialValues,
     validationSchema,
     onSubmit: (values) => {
+      if (values) {
+        dispatch(setFormValidity(true));
+      }
       console.log({ personalDetails: values });
+      // save user data in redux store
+      dispatch(saveData(values));
+      // action button to next step
+      dispatch(handleNext());
     },
   });
 
   return (
-    <Box component="form" onSubmit={formik.handleSubmit} padding={3}>
+    <FormStructure handleSubmit={formik.handleSubmit}>
       <PersonalData formik={formik} />
       <PollingUnit formik={formik} />
-    </Box>
+    </FormStructure>
   );
 }

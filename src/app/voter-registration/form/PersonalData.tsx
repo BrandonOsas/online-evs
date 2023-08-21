@@ -37,7 +37,7 @@ export default function PersonalData({ formik }: any) {
               onBlur={formik.handleBlur}
             />
             {formik.touched.firstname && formik.errors.firstname && (
-              <FormHelperText>{formik.errors.firstname}</FormHelperText>
+              <FormHelperText error>{formik.errors.firstname}</FormHelperText>
             )}
           </FormControl>
 
@@ -53,7 +53,7 @@ export default function PersonalData({ formik }: any) {
               onBlur={formik.handleBlur}
             />
             {formik.touched.lastname && formik.errors.lastname && (
-              <FormHelperText>{formik.errors.lastname}</FormHelperText>
+              <FormHelperText error>{formik.errors.lastname}</FormHelperText>
             )}
           </FormControl>
         </Box>
@@ -73,7 +73,7 @@ export default function PersonalData({ formik }: any) {
               onBlur={formik.handleBlur}
             />
             {formik.touched.email && formik.errors.email && (
-              <FormHelperText>{formik.errors.email}</FormHelperText>
+              <FormHelperText error>{formik.errors.email}</FormHelperText>
             )}
           </FormControl>
 
@@ -90,7 +90,7 @@ export default function PersonalData({ formik }: any) {
               onBlur={formik.handleBlur}
             />
             {formik.touched.phone && formik.errors.phone && (
-              <FormHelperText>{formik.errors.phone}</FormHelperText>
+              <FormHelperText error>{formik.errors.phone}</FormHelperText>
             )}
           </FormControl>
 
@@ -107,7 +107,7 @@ export default function PersonalData({ formik }: any) {
               onBlur={formik.handleBlur}
             />
             {formik.touched.birthdate && formik.errors.birthdate && (
-              <FormHelperText>{formik.errors.birthdate}</FormHelperText>
+              <FormHelperText error>{formik.errors.birthdate}</FormHelperText>
             )}
           </FormControl>
         </Box>
@@ -126,7 +126,7 @@ export default function PersonalData({ formik }: any) {
               onBlur={formik.handleBlur}
             />
             {formik.touched.street && formik.errors.street && (
-              <FormHelperText>{formik.errors.street}</FormHelperText>
+              <FormHelperText error>{formik.errors.street}</FormHelperText>
             )}
           </FormControl>
 
@@ -142,7 +142,7 @@ export default function PersonalData({ formik }: any) {
               onBlur={formik.handleBlur}
             />
             {formik.touched.city && formik.errors.city && (
-              <FormHelperText>{formik.errors.city}</FormHelperText>
+              <FormHelperText error>{formik.errors.city}</FormHelperText>
             )}
           </FormControl>
 
@@ -158,7 +158,7 @@ export default function PersonalData({ formik }: any) {
               onBlur={formik.handleBlur}
             />
             {formik.touched.state && formik.errors.state && (
-              <FormHelperText>{formik.errors.state}</FormHelperText>
+              <FormHelperText error>{formik.errors.state}</FormHelperText>
             )}
           </FormControl>
         </Box>
@@ -176,7 +176,7 @@ export default function PersonalData({ formik }: any) {
               onBlur={formik.handleBlur}
             />
             {formik.touched.lgar && formik.errors.lgar && (
-              <FormHelperText>{formik.errors.lgar}</FormHelperText>
+              <FormHelperText error>{formik.errors.lgar}</FormHelperText>
             )}
           </FormControl>
 
@@ -191,7 +191,7 @@ export default function PersonalData({ formik }: any) {
               onBlur={formik.handleBlur}
             />
             {formik.touched.hometown && formik.errors.hometown && (
-              <FormHelperText>{formik.errors.hometown}</FormHelperText>
+              <FormHelperText error>{formik.errors.hometown}</FormHelperText>
             )}
           </FormControl>
 
@@ -206,7 +206,7 @@ export default function PersonalData({ formik }: any) {
               onBlur={formik.handleBlur}
             />
             {formik.touched.lgao && formik.errors.lgao && (
-              <FormHelperText>{formik.errors.lgao}</FormHelperText>
+              <FormHelperText error>{formik.errors.lgao}</FormHelperText>
             )}
           </FormControl>
         </Box>
@@ -222,7 +222,7 @@ export default function PersonalData({ formik }: any) {
             onBlur={formik.handleBlur}
           />
           {formik.touched.occupation && formik.errors.occupation && (
-            <FormHelperText>{formik.errors.occupation}</FormHelperText>
+            <FormHelperText error>{formik.errors.occupation}</FormHelperText>
           )}
         </FormControl>
 
@@ -245,7 +245,7 @@ export default function PersonalData({ formik }: any) {
             <FormControlLabel value="other" control={<Radio />} label="Other" />
           </RadioGroup>
           {formik.touched.gender && formik.errors.gender && (
-            <FormHelperText>{formik.errors.gender}</FormHelperText>
+            <FormHelperText error>{formik.errors.gender}</FormHelperText>
           )}
         </FormControl>
       </Box>
