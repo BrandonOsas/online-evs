@@ -1,32 +1,82 @@
 import {
+  Alert,
+  AlertTitle,
   Box,
   Button,
   Chip,
+  CircularProgress,
   Divider,
   FormControl,
   FormHelperText,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
   TextField,
   Typography,
 } from "@mui/material";
 import FormStructure from "./FormStructure";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { handleNext, setFormValidity } from "@/redux/features/stepper";
-import { saveToken } from "@/redux/features/account";
+import { useEffect, useState } from "react";
+import { onValue, ref } from "firebase/database";
+import { database } from "../../../../firebase.config";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+
+type ids = "bvn" | "nin";
+
+interface BasicInfo {
+  firstname: string;
+  lastname: string;
+  birthdate: string;
+  gender: string;
+}
+
+interface CheckingState {
+  bvn: boolean;
+  nin: boolean;
+}
 
 const initialValues = {
-  bvn: "",
-  nin: "",
+  id: "",
+  password: "",
 };
 
 const validationSchema = yup.object({
-  bvn: yup.number().min(11),
-  nin: yup.number().min(11),
+  id: yup
+    .string()
+    .min(11, "BVN/NIN must be 11 numbers  long")
+    .required(
+      "Please enter either your BVN or NIN to validate your voter eligibility status"
+    ),
+  password: yup
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .required("You must set a password to continue"),
 });
 
 export default function Biometrics() {
   const dispatch = useAppDispatch();
+  const data = useAppSelector((state) => state.account.data);
+  const [identityInfo, setIdentityInfo] = useState<BasicInfo>();
+  const [idType, setIdType] = useState<ids | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [isChecking, setIsChecking] = useState<CheckingState>({
+    bvn: false,
+    nin: false,
+  });
+  const [isVerified, setIsVerified] = useState(false);
+  const [verificationStatus, showVerificationStatus] = useState(false);
+
+  const handleShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
 
   const formik = useFormik({
     initialValues,
@@ -35,18 +85,49 @@ export default function Biometrics() {
       if (values) {
         dispatch(setFormValidity(true));
       }
-      console.log({ personalDetails: values });
+
       // save bvn/nin and password
-      if (values.bvn) {
-        dispatch(saveToken({code: +values.bvn, password: "123456", type: "bvn"}))
-      } else {
-        dispatch(
-          saveToken({ code: +values.nin, password: "123456", type: "nin" })
-        );
-      }
+
       dispatch(handleNext());
     },
   });
+
+  useEffect(() => {
+    onValue(ref(database, "/tokens"), (snapshot) => {
+      let token: BasicInfo;
+      const data = snapshot.val();
+
+      if (formik.values.id) {
+        if (idType === "bvn") {
+          token = data.find(
+            (item: any) => item.bvn.toString() === formik.values.id
+          );
+        } else {
+          token = data.find(
+            (item: any) => item.nin.toString() === formik.values.id
+          );
+        }
+
+        setIdentityInfo(token);
+      }
+    });
+  }, [formik.values.id, idType]);
+
+  const handleVerification = (type: ids) => {
+    if (identityInfo) {
+      console.log("this function runs inside");
+      if (
+        identityInfo.firstname === data.firstname &&
+        identityInfo.lastname === data.lastname &&
+        identityInfo.gender.toLowerCase() === data.gender
+      ) {
+        setIsVerified(true);
+        console.log("this function runs inside inside");
+      }
+    }
+    setIsChecking({ bvn: false, nin: false });
+    showVerificationStatus(true);
+  };
 
   return (
     <FormStructure handleSubmit={formik.handleSubmit}>
@@ -64,7 +145,7 @@ export default function Biometrics() {
             fontWeight="bold"
             color="GrayText"
           >
-            Use BVN
+            Select Identification Method
           </Typography>
 
           <Box display="flex" gap={2} justifyContent="center">
@@ -75,39 +156,50 @@ export default function Biometrics() {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                name="bvn"
-            value={formik.values.bvn}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-          {formik.touched.bvn && formik.errors.bvn && (
-            <FormHelperText error>{formik.errors.bvn}</FormHelperText>
-          )}
+                name="id"
+                onChange={(e) => {
+                  if (e.target.value) {
+                    setIdType("bvn");
+                  } else {
+                    setIdType(null);
+
+                    setIsVerified(false);
+                    showVerificationStatus(false);
+                  }
+                  formik.handleChange(e);
+                }}
+                onBlur={formik.handleBlur}
+                disabled={idType === "nin"}
+              />
             </FormControl>
 
-            <Button variant="contained">Verify BVN</Button>
+            <Button
+              variant="contained"
+              color="success"
+              size="small"
+              disabled={idType === "nin"}
+              onClick={() => {
+                setIsChecking({ bvn: true, nin: false });
+                handleVerification("bvn");
+                console.log(identityInfo);
+              }}
+              startIcon={
+                isChecking.bvn ? (
+                  <CircularProgress
+                    sx={{ color: "white" }}
+                    size={20}
+                    thickness={5}
+                  />
+                ) : null
+              }
+            >
+              {isChecking.bvn ? "Checking" : "Verify BVN"}
+            </Button>
           </Box>
-        </Box>
 
-        <Divider sx={{ mt: 3, mb: 2 }}>
-          <Chip label="OR" />
-        </Divider>
-
-        <Box
-          component="fieldset"
-          border={0.2}
-          borderColor="lightgray"
-          padding={3}
-        >
-          <Typography
-            component="legend"
-            variant="overline"
-            fontSize={14}
-            fontWeight="bold"
-            color="GrayText"
-          >
-            Use NIN
-          </Typography>
+          <Divider sx={{ mt: 3, mb: 2 }}>
+            <Chip label="OR" />
+          </Divider>
 
           <Box display="flex" gap={2} justifyContent="center">
             <FormControl>
@@ -117,21 +209,101 @@ export default function Biometrics() {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                name="nin"
-                value={formik.values.nin}
-                onChange={formik.handleChange}
+                name="id"
+                onChange={(e) => {
+                  if (e.target.value) {
+                    setIdType("nin");
+                  } else {
+                    setIdType(null);
+                    setIsVerified(false);
+                    showVerificationStatus(false);
+                  }
+                  formik.handleChange(e);
+                }}
                 onBlur={formik.handleBlur}
+                disabled={idType === "bvn"}
               />
-              {formik.touched.nin && formik.errors.nin && (
-                <FormHelperText error>
-                  {formik.errors.nin}
-                </FormHelperText>
-              )}
             </FormControl>
 
-            <Button variant="contained">Verify NIN</Button>
+            <Button
+              variant="contained"
+              color="success"
+              size="small"
+              disabled={idType === "bvn"}
+              onClick={() => {
+                setIsChecking({ bvn: false, nin: true });
+                handleVerification("nin");
+                console.log(identityInfo);
+              }}
+            >
+              Verify NIN
+            </Button>
           </Box>
         </Box>
+        {formik.touched.id && formik.errors.id && (
+          <FormHelperText error>{formik.errors.id}</FormHelperText>
+        )}
+
+        {verificationStatus && (
+          <Box>
+            <Alert severity={isVerified ? "success" : "error"}>
+              <AlertTitle>
+                {isVerified
+                  ? "Identification Match Completed"
+                  : "No Record Found"}
+              </AlertTitle>
+              {isVerified ? (
+                <p>
+                  Congratulations —{" "}
+                  <strong>
+                    {`${identityInfo?.lastname} with ${idType?.toUpperCase()} ${
+                      formik.values.id
+                    }. `}{" "}
+                  </strong>{" "}
+                  You&apos;re eligible to vote. Please continue to choose
+                  password.
+                </p>
+              ) : (
+                <p>
+                  Oops! We couldn&apos;t find any record for the <strong>{idType?.toUpperCase()} number provided.</strong> Check and try again.
+                </p>
+              )}
+            </Alert>
+          </Box>
+        )}
+
+        {/* Show Password only when user is verified */}
+        {isVerified && (
+          <Box py={5} width="70%">
+            <FormControl variant="outlined" fullWidth>
+              <InputLabel htmlFor="passwordEl">Choose Password</InputLabel>
+              <OutlinedInput
+                id="passwordEl"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="visibility"
+                      onClick={handleShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label=" Choose Password"
+              />
+            </FormControl>
+            {formik.touched.password && formik.errors.password && (
+              <FormHelperText error>{formik.errors.password}</FormHelperText>
+            )}
+          </Box>
+        )}
       </Box>
     </FormStructure>
   );

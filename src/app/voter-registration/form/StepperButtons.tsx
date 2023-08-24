@@ -1,4 +1,5 @@
-import { handleBack, handleNext } from "@/redux/features/stepper";
+import { resetData } from "@/redux/features/account";
+import { handleBack, handleNext, handleReset } from "@/redux/features/stepper";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Box, Button } from "@mui/material";
 
@@ -19,12 +20,23 @@ export default function StepperButtons() {
       >
         Back
       </Button>
+      <Button
+        color="inherit"
+        onClick={async() => {
+          dispatch(handleReset());
+          await dispatch(resetData());
+        }}
+        sx={{ mr: 1 }}
+      >
+        Reset Form Data
+      </Button>
+
       <Box sx={{ flex: "1 1 auto" }} />
       <Button
         variant="contained"
         type={activeStep === steps.length - 1 ? "button" : "submit"}
         onClick={() => {
-          if (activeStep === steps.length - 1) dispatch(handleNext())
+          if (activeStep === steps.length - 1) dispatch(handleNext());
         }}
       >
         {activeStep === steps.length - 1 ? "Finish" : "Next"}

@@ -61,7 +61,7 @@ export default function VoterInformation() {
       }
       console.log({ personalDetails: values });
       // save user data in redux store
-      dispatch(saveData(values));
+      // dispatch(saveData(values));
       // action button to next step
       dispatch(handleNext());
     },

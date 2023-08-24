@@ -18,9 +18,9 @@ export default function PortalAction({
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
-      borderRadius={2}
+      boxShadow={3}
       py={4}
-      sx={{ backgroundColor: "#f8f8f8" }}
+      sx={{ backgroundColor: "#fafafa" }}
     >
       <Typography variant="h5" mb={5}>
         {title}

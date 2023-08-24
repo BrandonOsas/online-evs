@@ -9,7 +9,6 @@ import Biometrics from "./Biometrics";
 import Review from "./Review";
 import VoterInformation from "./VoterInformation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { handleReset } from "@/redux/features/stepper";
 import { NextLinkComposed } from "../../../components/Link";
 
 export default function FormStepper() {

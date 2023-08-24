@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { persistor } from "../store";
 
 interface DataProps {
+  country: string;
   [prop: string]: string;
 }
 
@@ -11,21 +13,25 @@ interface Token {
 }
 
 interface AccountState {
-  id: "new" | "existing",
+  id: "new" | "existing";
   data: DataProps;
   token: Token;
+  isVerified: boolean;
   isLoggedIn: boolean;
   hasAccount: boolean;
 }
 
 const initialState: AccountState = {
   id: "new",
-  data: {},
+  data: {
+    country: "",
+  },
   token: {
     code: 0,
     password: "",
     type: "",
   },
+  isVerified: false,
   isLoggedIn: false,
   hasAccount: false,
 };
@@ -34,19 +40,32 @@ const accountSlice = createSlice({
   name: "account",
   initialState,
   reducers: {
-    saveData(state, action: PayloadAction<DataProps>) {
-      state.data = action.payload;
+    saveCountry(state, action: PayloadAction<string>) {
+      state.data.country = action.payload;
     },
-    validateToken(state, action) {},
+    saveData(state, action: PayloadAction<DataProps>) {
+      state.data = { ...state.data, ...action.payload };
+    },
+    resetData() {},
+    validateToken(state, action: PayloadAction<Token>) {
+
+    },
     saveToken(state, action: PayloadAction<Token>) {
       state.token = action.payload;
     },
     validateVoter(state, action: PayloadAction<boolean>) {
       state.isLoggedIn = action.payload;
-    }
+    },
   },
 });
 
-export const { saveData, saveToken, validateToken, validateVoter } = accountSlice.actions;
+export const {
+  saveCountry,
+  saveData,
+  resetData,
+  saveToken,
+  validateToken,
+  validateVoter,
+} = accountSlice.actions;
 
 export default accountSlice.reducer;

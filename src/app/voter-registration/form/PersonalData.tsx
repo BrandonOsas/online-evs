@@ -102,7 +102,7 @@ export default function PersonalData({ formik }: any) {
               size="small"
               value={formik.values.birthdate}
               onChange={(e) =>
-                formik.setFieldValue("birthdate", e.target.value)
+                formik.setFieldValue("birthdate", new Date(e.target.value).toLocaleDateString('en-US'))
               }
               onBlur={formik.handleBlur}
             />
