@@ -44,7 +44,7 @@ const accountSlice = createSlice({
       state.data.country = action.payload;
     },
     saveData(state, action: PayloadAction<DataProps>) {
-      state.data = { ...state.data, ...action.payload };
+      state.data = action.payload;
     },
     resetData() {},
     validateToken(state, action: PayloadAction<Token>) {

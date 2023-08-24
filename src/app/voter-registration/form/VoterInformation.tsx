@@ -61,7 +61,7 @@ export default function VoterInformation() {
       }
       console.log({ personalDetails: values });
       // save user data in redux store
-      // dispatch(saveData(values));
+      dispatch(saveData({...values, country: data.country}));
       // action button to next step
       dispatch(handleNext());
     },

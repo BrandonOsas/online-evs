@@ -24,6 +24,7 @@ import { useEffect, useState } from "react";
 import { onValue, ref } from "firebase/database";
 import { database } from "../../../../firebase.config";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { saveToken } from "@/redux/features/account";
 
 type ids = "bvn" | "nin";
 
@@ -61,7 +62,7 @@ export default function Biometrics() {
   const dispatch = useAppDispatch();
   const data = useAppSelector((state) => state.account.data);
   const [identityInfo, setIdentityInfo] = useState<BasicInfo>();
-  const [idType, setIdType] = useState<ids | null>(null);
+  const [idType, setIdType] = useState<ids | string>("");
   const [showPassword, setShowPassword] = useState(false);
   const [isChecking, setIsChecking] = useState<CheckingState>({
     bvn: false,
@@ -85,8 +86,10 @@ export default function Biometrics() {
       if (values) {
         dispatch(setFormValidity(true));
       }
-
+      console.log("this function runs")
       // save bvn/nin and password
+      dispatch(saveToken({ code: +formik.values.id, password: formik.values.password, type: idType }))
+      console.log(values);
 
       dispatch(handleNext());
     },
@@ -115,14 +118,12 @@ export default function Biometrics() {
 
   const handleVerification = (type: ids) => {
     if (identityInfo) {
-      console.log("this function runs inside");
       if (
         identityInfo.firstname === data.firstname &&
         identityInfo.lastname === data.lastname &&
         identityInfo.gender.toLowerCase() === data.gender
       ) {
         setIsVerified(true);
-        console.log("this function runs inside inside");
       }
     }
     setIsChecking({ bvn: false, nin: false });
@@ -161,7 +162,7 @@ export default function Biometrics() {
                   if (e.target.value) {
                     setIdType("bvn");
                   } else {
-                    setIdType(null);
+                    setIdType("");
 
                     setIsVerified(false);
                     showVerificationStatus(false);
@@ -214,7 +215,7 @@ export default function Biometrics() {
                   if (e.target.value) {
                     setIdType("nin");
                   } else {
-                    setIdType(null);
+                    setIdType("");
                     setIsVerified(false);
                     showVerificationStatus(false);
                   }
