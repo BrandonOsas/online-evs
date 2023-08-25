@@ -28,6 +28,7 @@
     "react-redux": "^8.1.2",
     "redux-persist": "^6.0.0",
     "typescript": "5.1.6",
+    "yarn": "^1.22.19",
     "yup": "^1.2.0"
   }
 }

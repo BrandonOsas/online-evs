@@ -1,9 +1,22 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { persistor } from "../store";
 
 interface DataProps {
   country: string;
-  [prop: string]: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  birthdate: string;
+  street: string;
+  city: string;
+  state: string;
+  gender: string;
+  occupation: string;
+  lgao: string;
+  lgar: string;
+  phone: string;
+  hometown: string;
+  regarea: string;
+  pu: string;
 }
 
 interface Token {
@@ -25,6 +38,21 @@ const initialState: AccountState = {
   id: "new",
   data: {
     country: "",
+    firstname: "",
+    lastname: "",
+    email: "",
+    birthdate: "",
+    street: "",
+    city: "",
+    state: "",
+    gender: "",
+    occupation: "",
+    lgao: "",
+    lgar: "",
+    phone: "",
+    hometown: "",
+    regarea: "",
+    pu: "",
   },
   token: {
     code: 0,
@@ -47,9 +75,6 @@ const accountSlice = createSlice({
       state.data = action.payload;
     },
     resetData() {},
-    validateToken(state, action: PayloadAction<Token>) {
-
-    },
     saveToken(state, action: PayloadAction<Token>) {
       state.token = action.payload;
     },
@@ -64,7 +89,6 @@ export const {
   saveData,
   resetData,
   saveToken,
-  validateToken,
   validateVoter,
 } = accountSlice.actions;
 

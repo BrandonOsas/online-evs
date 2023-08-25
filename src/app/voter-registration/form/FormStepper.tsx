@@ -5,15 +5,18 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Biometrics from "./Biometrics";
 import Review from "./Review";
 import VoterInformation from "./VoterInformation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { NextLinkComposed } from "../../../components/Link";
+import Identification from "./Identification";
 
 export default function FormStepper() {
   const activeStep = useAppSelector((state) => state.stepper.activeStep);
   const steps = useAppSelector((state) => state.stepper.steps);
+  const { data } = useAppSelector(
+    (state) => state.account
+  );
   const dispatch = useAppDispatch();
 
   return (
@@ -40,11 +43,16 @@ export default function FormStepper() {
           );
         })}
       </Stepper>
+
       {activeStep === steps.length && (
         <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished
-          </Typography>
+          <Box px={3} pt={5} pb={15}>
+            <Typography fontSize={13}>
+              An email verification code has been sent to <b>{data.email}</b>.
+              Please check your email and enter the code below to complete
+              verification process and set up two-factor authentication.
+            </Typography>
+          </Box>
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             <Box sx={{ flex: "1 1 auto" }} />
             <Button component={NextLinkComposed} to="/portal">
@@ -57,7 +65,7 @@ export default function FormStepper() {
       {activeStep !== steps.length && (
         <React.Fragment>
           {activeStep === 0 && <VoterInformation />}
-          {activeStep === 1 && <Biometrics />}
+          {activeStep === 1 && <Identification />}
           {activeStep === 2 && <Review />}
         </React.Fragment>
       )}

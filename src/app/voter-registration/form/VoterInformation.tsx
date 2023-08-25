@@ -9,24 +9,6 @@ import FormStructure from "./FormStructure";
 import { saveData } from "@/redux/features/account";
 
 
-const initialValues = {
-  firstname: "",
-  lastname: "",
-  email: "",
-  birthdate: "",
-  street: "",
-  city: "",
-  state: "",
-  gender: "",
-  occupation: "",
-  lgao: "",
-  lgar: "",
-  phone: "",
-  hometown: "",
-  regarea: "",
-  pu: "",
-};
-
 const validationSchema = yup.object({
   firstname: yup.string().required("First name cannot be empty!"),
   lastname: yup.string().required("Last name cannot be empty!"),
@@ -53,7 +35,7 @@ export default function VoterInformation() {
   const dispatch = useAppDispatch();
 
   const formik = useFormik({
-    initialValues: data ? data : initialValues,
+    initialValues: data,
     validationSchema,
     onSubmit: (values) => {
       if (values) {

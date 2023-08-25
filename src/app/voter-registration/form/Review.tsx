@@ -7,11 +7,17 @@ export default function Review() {
 
   return (
     <Box px={5} py={5}>
-      <Typography variant="h5">Voter Information Summary</Typography>
+      <Typography variant="h4">Voter Information Summary</Typography>
+      <Typography variant="subtitle2" color="error">
+        Please review carefully before you submit. You cannot edit the form
+        beyond this point.
+      </Typography>
 
-      <Box py={2} px={1}>
-        <Typography variant="subtitle1">Bio-data</Typography>
-        <Divider sx={{ mb: 1 }} />
+      <Box py={3} px={1}>
+        <Typography variant="h6" color="GrayText">
+          Personal Information
+        </Typography>
+        <Divider sx={{ mb: 2 }} />
         <Typography>Firstname: {data.firstname}</Typography>
         <Typography>Surname: {data.lastname}</Typography>
         <Typography>Email: {data.email}</Typography>
@@ -28,7 +34,9 @@ export default function Review() {
       </Box>
 
       <Box py={2} px={1}>
-        <Typography variant="subtitle1">Polling Unit</Typography>
+        <Typography variant="h6" color="GrayText">
+          Polling Unit
+        </Typography>
         <Divider sx={{ mb: 1 }} />
         <Typography>Registration Area: {data.regarea}</Typography>
         <Typography>Polling Unit: {data.pu}</Typography>

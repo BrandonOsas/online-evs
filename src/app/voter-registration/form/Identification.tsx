@@ -1,3 +1,4 @@
+"use client"
 import {
   Alert,
   AlertTitle,
@@ -21,8 +22,9 @@ import * as yup from "yup";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { handleNext, setFormValidity } from "@/redux/features/stepper";
 import { useEffect, useState } from "react";
-import { onValue, ref } from "firebase/database";
-import { database } from "../../../../firebase.config";
+import { onValue, ref, set } from "firebase/database";
+import { auth, database } from "../../../../firebase.config";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { saveToken } from "@/redux/features/account";
 
@@ -58,7 +60,7 @@ const validationSchema = yup.object({
     .required("You must set a password to continue"),
 });
 
-export default function Biometrics() {
+export default function Identification() {
   const dispatch = useAppDispatch();
   const data = useAppSelector((state) => state.account.data);
   const [identityInfo, setIdentityInfo] = useState<BasicInfo>();
@@ -86,11 +88,15 @@ export default function Biometrics() {
       if (values) {
         dispatch(setFormValidity(true));
       }
-      console.log("this function runs")
       // save bvn/nin and password
-      dispatch(saveToken({ code: +formik.values.id, password: formik.values.password, type: idType }))
-      console.log(values);
-
+      dispatch(
+        saveToken({
+          code: +formik.values.id,
+          password: formik.values.password,
+          type: idType,
+        })
+      );
+      console.log(values)
       dispatch(handleNext());
     },
   });
@@ -261,7 +267,7 @@ export default function Biometrics() {
                       formik.values.id
                     }. `}{" "}
                   </strong>{" "}
-                  You&apos;re eligible to vote. Please continue to choose
+                  You&apos;re eligible to proceed. Please continue to choose
                   password.
                 </p>
               ) : (
