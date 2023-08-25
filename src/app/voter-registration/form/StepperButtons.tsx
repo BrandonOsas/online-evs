@@ -11,7 +11,7 @@ import {
 
 const actionCodeSettings = {
   url: "https://online-evs.vercel.app/2FA-authentication",
-  handleCodeInApp: false,
+  handleCodeInApp: true,
 };
 
 export default function StepperButtons() {
