@@ -4,10 +4,13 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Box, Button } from "@mui/material";
 import { ref, set } from "firebase/database";
 import { auth, database } from "../../../../firebase.config";
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 
 const actionCodeSettings = {
-  url: "https://online-evs.vercel.app/2FA-authentication/verify-phone",
+  url: "https://online-evs.vercel.app/2FA-authentication",
   handleCodeInApp: false,
 };
 
