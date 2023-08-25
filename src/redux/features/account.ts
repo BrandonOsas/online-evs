@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { User } from "firebase/auth";
 
 interface DataProps {
   country: string;
@@ -29,6 +30,7 @@ interface AccountState {
   id: "new" | "existing";
   data: DataProps;
   token: Token;
+  user: User | null;
   isVerified: boolean;
   isLoggedIn: boolean;
   hasAccount: boolean;
@@ -59,6 +61,7 @@ const initialState: AccountState = {
     password: "",
     type: "",
   },
+  user: null,
   isVerified: false,
   isLoggedIn: false,
   hasAccount: false,
@@ -74,6 +77,9 @@ const accountSlice = createSlice({
     saveData(state, action: PayloadAction<DataProps>) {
       state.data = action.payload;
     },
+    saveAuthUser(state, action: PayloadAction<User>) {
+      state.user = action.payload;
+    },
     resetData() {},
     saveToken(state, action: PayloadAction<Token>) {
       state.token = action.payload;
@@ -87,6 +93,7 @@ const accountSlice = createSlice({
 export const {
   saveCountry,
   saveData,
+  saveAuthUser,
   resetData,
   saveToken,
   validateVoter,

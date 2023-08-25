@@ -1,58 +1,45 @@
-"use client"
+"use client";
 import { Box, Button, FormControl, TextField, Typography } from "@mui/material";
 import {
   multiFactor,
   PhoneAuthProvider,
   PhoneMultiFactorGenerator,
-  RecaptchaVerifier,
 } from "firebase/auth";
-import { auth } from "../../../../firebase.config";
 import { useAppSelector } from "@/redux/hooks";
 import { useState } from "react";
 import { NextLinkComposed } from "@/components/Link";
+import { useSearchParams } from "next/navigation";
 
 export default function PhoneVerification() {
-  const { phone: phoneNumber } = useAppSelector((state) => state.account.data);
+  const searchParams = useSearchParams();
+  const verificationId = searchParams.get("verificationId");
   const [verificationCode, setVerificationCode] = useState("");
-  const user = auth.currentUser!;
+  const user = useAppSelector(state => state.account.user)!;
 
-  const recaptchaVerifier = new RecaptchaVerifier(
-    auth,
-    "recaptcha-container-id",
-    { size: "invisible" }
-  );
+  // Request SMS verification code and complete enrollment
+  const handleVerification = async () => {
+    try {
+      // You should check if `verificationCode` is not empty before proceeding
+      if (verificationId && verificationCode) {
+        const cred = PhoneAuthProvider.credential(
+          verificationId,
+          verificationCode
+        );
 
-  multiFactor(user)
-    .getSession()
-    .then(function (multiFactorSession) {
-      // Specify the phone number and pass the MFA session.
-      const phoneInfoOptions = {
-        phoneNumber: phoneNumber,
-        session: multiFactorSession,
-      };
+        const multiFactorAssertion = PhoneMultiFactorGenerator.assertion(cred);
 
-      const phoneAuthProvider = new PhoneAuthProvider(auth);
+        await multiFactor(user).enroll(
+          multiFactorAssertion,
+          "Primary phone number"
+        );
+      }
 
-      // Send SMS verification code.
-      return phoneAuthProvider.verifyPhoneNumber(
-        phoneInfoOptions,
-        recaptchaVerifier
-      );
-    })
-    .then(function (verificationId) {
-      // Ask user for the verification code. Then:
-      const cred = PhoneAuthProvider.credential(
-        verificationId,
-        verificationCode
-      );
-      const multiFactorAssertion = PhoneMultiFactorGenerator.assertion(cred);
-
-      // Complete enrollment.
-      return multiFactor(user).enroll(
-        multiFactorAssertion,
-        "Primary phone number"
-      );
-    });
+      // After successful enrollment, you can navigate to the desired page
+    } catch (error) {
+      // Handle any errors that occur during this process
+      console.error("Error:", error);
+    }
+  };
 
   return (
     <Box px={3} py={15}>
@@ -90,7 +77,13 @@ export default function PhoneVerification() {
             />
           </FormControl>
 
-          <Button component={NextLinkComposed} type="button" to="/portal" variant="contained" color="inherit"  >
+          <Button
+            component={NextLinkComposed}
+            type="button"
+            to="/portal"
+            variant="contained"
+            color="inherit"
+          >
             Continue
           </Button>
         </Box>

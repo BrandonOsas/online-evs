@@ -1,4 +1,4 @@
-import { resetData } from "@/redux/features/account";
+import { resetData, saveAuthUser } from "@/redux/features/account";
 import { handleBack, handleNext, handleReset } from "@/redux/features/stepper";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Box, Button } from "@mui/material";
@@ -61,7 +61,7 @@ export default function StepperButtons() {
               token.password
             ).then(async (credential) => {
               console.log(credential.user);
-
+              dispatch(saveAuthUser(credential.user));
               await sendEmailVerification(credential.user, actionCodeSettings);
             });
             dispatch(handleNext());

@@ -18,6 +18,7 @@ export default function FormStepper() {
     (state) => state.account
   );
   const dispatch = useAppDispatch();
+  console.log(activeStep);
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -44,7 +45,7 @@ export default function FormStepper() {
         })}
       </Stepper>
 
-      {activeStep === steps.length && (
+      {activeStep === steps.length + 1 && (
         <React.Fragment>
           <Box px={3} pt={5} pb={15}>
             <Typography fontSize={13}>
