@@ -1,9 +1,11 @@
 "use client";
 import { Box, Button, Typography } from "@mui/material";
 import {
+  signInWithEmailAndPassword,
   multiFactor,
   PhoneAuthProvider,
   RecaptchaVerifier,
+  User,
 } from "firebase/auth";
 import { auth } from "../../../firebase.config";
 import { useAppSelector } from "@/redux/hooks";
@@ -11,10 +13,24 @@ import { useState } from "react";
 import { NextLinkComposed } from "@/components/Link";
 
 export default function PhoneVerification() {
-  const { phone: phoneNumber } = useAppSelector((state) => state.account.data);
+  const { phone: phoneNumber, email } = useAppSelector((state) => state.account.data);
+  const { password } = useAppSelector(
+    (state) => state.account.token
+  );
   const [verificationId, setVerificationId] = useState("");
-  const user = auth.currentUser!;
+  let user: User;
   const phoneAuthProvider = new PhoneAuthProvider(auth);
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed in
+      user = userCredential.user;
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode, errorMessage)
+    });
 
   const recaptchaVerifier = new RecaptchaVerifier(
     auth,
