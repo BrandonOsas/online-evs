@@ -1,5 +1,5 @@
-import { validateVoter } from "@/redux/features/account";
-import { useAppDispatch } from "@/redux/hooks";
+"use client"
+// import { useAppDispatch } from "@/redux/hooks";
 import {
   Box,
   Button,
@@ -13,31 +13,30 @@ import { useRouter } from "next/navigation";
 import * as yup from "yup";
 
 const initialValues = {
-  identifier: "",
+  email: "",
   password: "",
 };
 
 const validationSchema = yup.object({
-  identifier: yup.string().required().min(11),
+  email: yup.string().email().required(),
   password: yup.string().required(),
 });
 
 export default function SignIn() {
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const router = useRouter();
 
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
-       try {
-         console.log(values);
-         dispatch(validateVoter(true));
-         router.push("/voting");
-       } catch (error) {
-         // Handle the error here, e.g., show an error message
-         console.error("Error during redirection:", error);
-       }
+      try {
+        console.log(values);
+        router.push("/");
+      } catch (error) {
+        // Handle the error here, e.g., show an error message
+        console.error("Error during redirection:", error);
+      }
     },
   });
   return (
@@ -50,7 +49,7 @@ export default function SignIn() {
       justifyContent="center"
       gap={5}
     >
-      <Box display="flex" flexDirection="column"  alignItems="center" gap={.5}>
+      <Box display="flex" flexDirection="column" alignItems="center" gap={0.5}>
         <Typography variant="h4">Sign In</Typography>
         <Typography fontSize={13}>
           Please use the identification registered during account setup
@@ -67,10 +66,10 @@ export default function SignIn() {
       >
         <FormControl fullWidth>
           <TextField
-            label="Enter BVN/NIN"
+            label="Email"
             size="small"
-            name="identifier"
-            value={formik.values.identifier}
+            name="email"
+            value={formik.values.email}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             InputLabelProps={{
@@ -78,7 +77,7 @@ export default function SignIn() {
             }}
           />
           <FormHelperText>
-            {formik.errors.identifier && formik.errors.identifier}
+            {formik.errors.email && formik.errors.email}
           </FormHelperText>
         </FormControl>
 

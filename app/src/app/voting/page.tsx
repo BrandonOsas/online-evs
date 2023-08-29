@@ -20,13 +20,15 @@ import Stats from "./Stats";
 export default function Vote() {
   const [election, setElection] = useState<string>("");
   const [candidate, setCandidate] = useState<string>("");
-  const isLoggedIn = useAppSelector((state) => state.account.isLoggedIn);
+  const user = useAppSelector((state) => state.account.user);
+
+  console.log(user)
 
   const handleElection = (e: SelectChangeEvent) => {
     setElection(e.target.value);
   }
 
-  if (!isLoggedIn) {
+  if (!user) {
     return redirect("/voting/authenticate-voter");
   }
 

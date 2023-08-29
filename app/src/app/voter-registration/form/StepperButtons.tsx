@@ -9,16 +9,18 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 
-const actionCodeSettings = {
-  url: "https://online-evs.vercel.app/2FA-authentication",
-  handleCodeInApp: true,
-};
 
 export default function StepperButtons() {
   const activeStep = useAppSelector((state) => state.stepper.activeStep);
   const steps = useAppSelector((state) => state.stepper.steps);
   const { data, token } = useAppSelector((state) => state.account);
   const dispatch = useAppDispatch();
+
+  const actionCodeSettings = {
+    // url: "http://localhost:3000/2FA-authentication/?email=" + data.email,
+    url: "http://localhost:3000/portal",
+    handleCodeInApp: false,
+  };
 
   return (
     <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
@@ -65,7 +67,8 @@ export default function StepperButtons() {
             ).then(async (credential) => {
               console.log(credential.user);
               dispatch(saveAuthUser(credential.user));
-              await sendEmailVerification(credential.user, actionCodeSettings);
+              const link = await sendEmailVerification(credential.user, actionCodeSettings);
+              console.log(link);
             });
             dispatch(handleNext());
           }

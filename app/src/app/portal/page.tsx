@@ -2,10 +2,13 @@
 import PortalAction from "@/app/portal/PortalAction";
 import { useAppSelector } from "@/redux/hooks";
 import { Box, Button, Divider, Typography } from "@mui/material";
-import CountryPicker from "./CountryPicker";
+import { auth } from "../../../firebase.config";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function Portal() {
   const { country } = useAppSelector((state) => state.account.data);
+  const user = auth.currentUser;
+
   return (
     <Box display="flex" justifyContent="center" alignItems="center">
       <Box
@@ -17,13 +20,25 @@ export default function Portal() {
       >
         <Box
           display="flex"
-          justifyContent="center"
+          justifyContent={user ? "space-between" : "center"}
           alignItems="center"
           gap={2}
           py={0.3}
         >
-          <Typography>Selected country: {country}</Typography>
-          <Button variant="contained" size="small">Change</Button>
+          <Box>
+            <Typography>Selected country: {country}</Typography>
+          <Button variant="contained" size="small">
+            Change
+          </Button>
+          </Box>
+
+          {user && (
+            <Box display="flex" flexDirection="column" justifyContent="end" alignItems="center">
+              <Typography variant="subtitle2">Signed in as</Typography>
+              <Typography>{user.email}</Typography>
+            </Box>
+          )}
+
         </Box>
 
         <Box py={3}>
