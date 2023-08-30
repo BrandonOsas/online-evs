@@ -9,10 +9,11 @@ import { getDatabase } from "firebase/database";
 const firebaseConfig = {
   apiKey: "AIzaSyBtVFWpJ63P1rnp0g4u8-LJ3tDvZ21Gw-U",
   authDomain: "online-evs-portal.firebaseapp.com",
+  databaseURL: "https://online-evs-portal-default-rtdb.firebaseio.com",
   projectId: "online-evs-portal",
   storageBucket: "online-evs-portal.appspot.com",
   messagingSenderId: "491839476983",
-  appId: "1:491839476983:web:bc16374ffdc82cff98eff2",
+  appId: "1:491839476983:web:bc16374ffdc82cff98eff2"
 };
 
 // Initialize Firebase

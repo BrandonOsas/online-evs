@@ -35,7 +35,7 @@
     "**/*.ts",
     "**/*.tsx",
     "app/.next/types/**/*.ts",
-    "firebase.config.js",
+    "firebase.config.ts",
     ".next/types/**/*.ts"
   ],
   "exclude": [
