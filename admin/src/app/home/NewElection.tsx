@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Divider,
   FormControl,
   IconButton,
   InputLabel,
@@ -16,7 +15,8 @@ import { electionTypes } from "@/data/types";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
-import { StringFormat } from "firebase/storage";
+import { set, ref } from "firebase/database";
+import { database } from "../../../firebase.config";
 
 interface CandidateProps {
   name: string;
@@ -28,7 +28,7 @@ interface TimeProps {
   to: string;
 }
 
-interface ValuesProps {
+export interface ValuesProps {
   type: string;
   state: string;
   lga: string;
@@ -66,20 +66,52 @@ const validationSchema = yup.object({
   }),
 });
 
+const getElectionId = (type: string, state: string, date: string): string => {
+  const stateCode = stateData.find((value) => value.name === state)?.code;
+  let id = "";
+
+  switch (type) {
+    case "Presidential":
+      id = `npe${new Date(date).getFullYear()}`;
+      break;
+    case "National/House of Senate":
+      id = `nhs${new Date(date).getFullYear()}`;
+      break;
+    case "House of Representatives":
+      id = `nhr${new Date(date).getFullYear()}`;
+      break;
+    case "Governorship":
+      id = `${stateCode?.toLowerCase()}gov${new Date(date).getFullYear()}`;
+      break;
+    case "State/House of Assembly":
+      id = `${stateCode?.toLowerCase()}ha${new Date(date).getFullYear()}`;
+      break;
+    case "Local Government":
+      id = `${stateCode?.toLowerCase()}lga${new Date(date).getFullYear()}`;
+      break;
+    default:
+      id = Math.random().toString();
+  }
+
+  return id;
+};
+
 export default function NewElection() {
-  const ref = useRef<{ lga: string[] }>({ lga: [] });
+  const lgRef = useRef<{ lga: string[] }>({ lga: [] });
   const [numCandidates, setNumCandidates] = useState(2);
 
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit(values) {
-      console.log(values);
+      const id = getElectionId(values.type, values.state, values.date);
+
+      set(ref(database, `elections/upcoming/${id}`), values);
     },
   });
 
   useEffect(() => {
-    ref.current.lga = stateData.find(
+    lgRef.current.lga = stateData.find(
       (state) => state.name === formik.values.state
     )?.lgas!;
   }, [formik.values.state]);
@@ -142,7 +174,7 @@ export default function NewElection() {
               onChange={formik.handleChange}
               disabled={formik.values.type !== "Local Government"}
             >
-              {ref.current.lga?.map((lga, index) => (
+              {lgRef.current.lga?.map((lga, index) => (
                 <MenuItem key={index} value={lga}>
                   {lga}
                 </MenuItem>
@@ -244,7 +276,9 @@ export default function NewElection() {
           </Box>
         </Box>
 
-        <Button type="submit" variant="contained" fullWidth>submit election schedule</Button>
+        <Button type="submit" variant="contained" fullWidth>
+          submit election schedule
+        </Button>
       </Box>
     </Box>
   );

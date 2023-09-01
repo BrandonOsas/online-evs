@@ -1,4 +1,3 @@
-import { validateVoter } from "@/redux/features/account";
 import { useAppDispatch } from "@/redux/hooks";
 import {
   Box,
@@ -8,9 +7,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import * as yup from "yup";
+import { auth } from "../../../../firebase.config";
 
 const initialValues = {
   email: "",
@@ -31,9 +32,16 @@ export default function SignIn() {
     validationSchema,
     onSubmit: async (values) => {
        try {
-         console.log(values);
-         dispatch(validateVoter(true));
-         router.push("/voting");
+         // Sign in as regular user
+         await signInWithEmailAndPassword(
+           auth,
+           values.email,
+           values.password
+         ).then((userCredential) => {
+           const user = userCredential.user;
+           // if user exists redirects to the voting portal
+           if (user) router.push("/voting");
+         });
        } catch (error) {
          // Handle the error here, e.g., show an error message
          console.error("Error during redirection:", error);

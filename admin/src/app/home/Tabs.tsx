@@ -4,6 +4,7 @@ import { styled } from "@mui/material/styles";
 import { useTheme, Box, Tabs, Tab } from "@mui/material";
 import SwipeableViews from "react-swipeable-views";
 import NewElection from "./NewElection";
+import UpcomingElection from "./UpcomingElection";
 
 interface StyledTabProps {
   label: string;
@@ -108,7 +109,7 @@ export default function CustomizedTabs() {
           <NewElection />
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          Item Two
+          <UpcomingElection />
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
           Item Three

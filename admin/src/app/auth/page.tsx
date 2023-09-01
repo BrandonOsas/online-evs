@@ -1,4 +1,4 @@
-"use client"
+"use client";
 // import { useAppDispatch } from "@/redux/hooks";
 import {
   Box,
@@ -11,6 +11,10 @@ import {
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import * as yup from "yup";
+import { auth, database } from "../../../firebase.config";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { ref, child, get } from "firebase/database";
+
 
 const initialValues = {
   email: "",
@@ -32,7 +36,35 @@ export default function SignIn() {
     onSubmit: async (values) => {
       try {
         console.log(values);
-        router.push("/");
+
+        // Sign in as regular user
+        await signInWithEmailAndPassword(
+          auth,
+          values.email,
+          values.password
+        ).then((userCredential) => {
+          const user = userCredential.user;
+          // if user exists, check if user has an admin email
+          get(child(ref(database), "admins/"))
+            .then((snapshot) => {
+              if (snapshot.exists()) {
+                console.log(snapshot.val());
+
+                const admins: { email: string; }[] = snapshot.val();
+
+                if (admins.filter(admin => admin.email === user.email)) {
+                  router.push("/");
+                }
+
+              } else {
+                console.log("No data available");
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+
+        });
       } catch (error) {
         // Handle the error here, e.g., show an error message
         console.error("Error during redirection:", error);

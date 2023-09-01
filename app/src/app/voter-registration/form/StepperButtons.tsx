@@ -54,21 +54,26 @@ export default function StepperButtons() {
 
           // Save and create user credentials and send email verification link
           if (activeStep === 2) {
-            // Save user to firebase database
-            set(ref(database, "voters/" + token.code), {
-              idType: token.type,
-              ...data,
-            });
+
             // Create user auth credentials
             createUserWithEmailAndPassword(
               auth,
               data.email,
               token.password
             ).then(async (credential) => {
-              console.log(credential.user);
               dispatch(saveAuthUser(credential.user));
-              const link = await sendEmailVerification(credential.user, actionCodeSettings);
-              console.log(link);
+
+              // Save user to firebase database
+              set(ref(database, "voters/" + credential.user.uid), {
+                idType: token.type,
+                idToken: token.code,
+                ...data,
+              });
+
+              await sendEmailVerification(
+                credential.user,
+                actionCodeSettings
+              );
             });
             dispatch(handleNext());
           }
