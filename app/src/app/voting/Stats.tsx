@@ -1,32 +1,48 @@
 import { useAppSelector } from "@/redux/hooks";
 import { Box, Typography } from "@mui/material";
 import Performance from "./Performance";
-
-const liveResults = [
-  { name: "Obaseki Godwin", votes: 234500 },
-  { name: "Queen Idia", votes: 945678 },
-  { name: "Festus Alenkhe", votes: 192838 },
-  { name: "Sydney Shocker", votes: 590432 },
-];
-
-const liveNumbers = liveResults.map((candidate) => candidate.votes);
-
-const totalVotes = liveNumbers.reduce((total, candidate) => {
-  return total + candidate;
-});
-
-const calcPercentages = (votes: number, totalVotes: number) => {
-  return (votes / totalVotes) * 100;
-};
+import { useEffect, useState } from "react";
+import { CandidateVotes } from "./page";
+import { onValue, ref } from "firebase/database";
+import { database } from "../../../firebase.config";
 
 interface StatsProps {
   title: string;
+  electionKey: string;
 }
 
-export default function Stats({ title }: StatsProps) {
-  const data = useAppSelector((state) => state.account.data);
-  const { state } = data;
+export default function Stats({ title, electionKey }: StatsProps) {
+  const { state } = useAppSelector((state) => state.account.data);
+  const [results, setResults] = useState<Record<string, CandidateVotes>>({});
   let electionTitle: string;
+
+  const calcPercentages = (votes: number, totalVotes: number) => {
+    return (votes / totalVotes) * 100;
+  };
+
+  // Calculate the total votes by reducing the 'votes' property of all parties
+  const totalVotes = Object.values(results).reduce(
+    (acc, party) => acc + party.votes,
+    0
+  );
+
+  useEffect(() => {
+    // Get a reference to the 'results' node in your Firebase database
+    const resultsRef = ref(database, `results/${electionKey}`);
+
+    // Set up a listener to fetch and update results data
+    const unsubscribe = onValue(resultsRef, (snapshot) => {
+      const data = snapshot.val() || {}; // Handle null values
+
+      // Update the state with the fetched results data
+      setResults(data);
+    });
+
+    // Clean up the listener when the component unmounts
+    return () => {
+      unsubscribe(); // Unsubscribe to avoid memory leaks
+    };
+  }, [electionKey]);
 
   switch (title) {
     case "presidential":
@@ -44,14 +60,21 @@ export default function Stats({ title }: StatsProps) {
     <Box>
       <Typography variant="h6">{electionTitle.toUpperCase()}</Typography>
 
-      <Typography variant="subtitle2">Total votes casted: {totalVotes.toLocaleString()}</Typography>
+      <Typography variant="subtitle2">
+        Total votes casted: {totalVotes.toLocaleString()}
+      </Typography>
 
       <Box display="flex" justifyContent="center" gap={6} py={3}>
-        {liveResults.map((candidate, index) => {
+        {Object.keys(results).map((party, index) => {
           const candidateVotePercentage = calcPercentages(
-            candidate.votes,
+            results[party].votes,
             totalVotes
           );
+
+          const candidate = {
+            name: results[party].candidateName,
+            votes: results[party].votes
+          }
 
           return (
             <Performance

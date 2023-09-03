@@ -8,6 +8,7 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
+import { NextLinkComposed } from "@/components/Link";
 
 
 export default function StepperButtons() {
@@ -25,6 +26,26 @@ export default function StepperButtons() {
   return (
     <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
       <Button
+        component={NextLinkComposed}
+        variant="contained"
+        color="error"
+        to="/portal"
+        sx={{ mr: 1 }}
+      >
+        Cancel
+      </Button>
+      <Button
+        variant="contained"
+        color="warning"
+        onClick={async () => {
+          dispatch(handleReset());
+          await dispatch(resetData());
+        }}
+        sx={{ mr: 1 }}
+      >
+        Reset
+      </Button>
+      <Button
         color="inherit"
         disabled={activeStep === 0}
         onClick={() => {
@@ -33,16 +54,6 @@ export default function StepperButtons() {
         sx={{ mr: 1 }}
       >
         Back
-      </Button>
-      <Button
-        color="inherit"
-        onClick={async () => {
-          dispatch(handleReset());
-          await dispatch(resetData());
-        }}
-        sx={{ mr: 1 }}
-      >
-        Clear Form Data
       </Button>
 
       <Box sx={{ flex: "1 1 auto" }} />
@@ -54,7 +65,6 @@ export default function StepperButtons() {
 
           // Save and create user credentials and send email verification link
           if (activeStep === 2) {
-
             // Create user auth credentials
             createUserWithEmailAndPassword(
               auth,
@@ -70,10 +80,7 @@ export default function StepperButtons() {
                 ...data,
               });
 
-              await sendEmailVerification(
-                credential.user,
-                actionCodeSettings
-              );
+              await sendEmailVerification(credential.user, actionCodeSettings);
             });
             dispatch(handleNext());
           }

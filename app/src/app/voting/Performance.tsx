@@ -13,7 +13,7 @@ export default function Performance({candidateStats, votePercentage}: Performanc
   return (
     <Box display="flex" flexDirection="column" gap={1} alignItems="center">
       <Typography variant="overline" color="primary">{candidateStats.name}</Typography>
-      <Typography variant="h6">{candidateStats.votes.toLocaleString()}</Typography>
+      <Typography variant="h6">{candidateStats.votes?.toLocaleString()}</Typography>
       <CircularPercentage value={votePercentage} />
     </Box>
   );

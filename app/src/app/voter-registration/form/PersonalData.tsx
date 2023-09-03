@@ -100,9 +100,10 @@ export default function PersonalData({ formik }: any) {
               variant="outlined"
               name="birthdate"
               size="small"
+              type="date"
               value={formik.values.birthdate}
               onChange={(e) =>
-                formik.setFieldValue("birthdate", new Date(e.target.value).toLocaleDateString('en-US'))
+                formik.setFieldValue("birthdate", e.target.value)
               }
               onBlur={formik.handleBlur}
             />
@@ -211,7 +212,7 @@ export default function PersonalData({ formik }: any) {
           </FormControl>
         </Box>
 
-        <FormControl fullWidth sx={{pb:2}}>
+        <FormControl fullWidth sx={{ pb: 2 }}>
           <TextField
             label="Occupation"
             variant="outlined"
@@ -236,7 +237,11 @@ export default function PersonalData({ formik }: any) {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           >
-            <FormControlLabel value="male" control={<Radio color="default" />} label="Male" />
+            <FormControlLabel
+              value="male"
+              control={<Radio color="default" />}
+              label="Male"
+            />
             <FormControlLabel
               value="female"
               control={<Radio />}
