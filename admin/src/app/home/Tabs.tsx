@@ -1,10 +1,11 @@
 "use client";
 import * as React from "react";
 import { styled } from "@mui/material/styles";
-import { useTheme, Box, Tabs, Tab } from "@mui/material";
+import { useTheme, Box, Tabs, Tab, Typography } from "@mui/material";
 import SwipeableViews from "react-swipeable-views";
 import NewElection from "./NewElection";
 import UpcomingElection from "./UpcomingElection";
+import OngoingElection from "./OngoingElection";
 
 interface StyledTabProps {
   label: string;
@@ -112,7 +113,14 @@ export default function CustomizedTabs() {
           <UpcomingElection />
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
-          Item Three
+          <OngoingElection />
+        </TabPanel>
+        <TabPanel value={value} index={2} dir={theme.direction}>
+          <Typography>No past elections found in the database at this time.</Typography>
+        </TabPanel>
+        <TabPanel value={value} index={2} dir={theme.direction}>
+          <OngoingElection />
+          <UpcomingElection />
         </TabPanel>
       </SwipeableViews>
     </Box>

@@ -4,23 +4,22 @@ import { onValue, ref } from "firebase/database";
 import { database } from "../../../firebase.config";
 import ElectionItem, { ElectionData } from "./ElectionItem";
 
-
-export default function UpcomingElection() {
-  const [upcomingElections, setUpcomingElections] =
+export default function OngoingElection() {
+  const [ongoingElections, setOngoingElections] =
     useState<Record<string, ElectionData>>();
 
   useEffect(() => {
-    const upcomingRef = ref(database, "elections/upcoming");
-    onValue(upcomingRef, (snapshot) => {
+    const ongoingRef = ref(database, "elections/ongoing");
+    onValue(ongoingRef, (snapshot) => {
       const data = snapshot.val();
       console.log(data);
-      setUpcomingElections(data);
+      setOngoingElections(data);
     });
   }, []);
 
   return (
     <Box sx={{ flexGrow: 1, maxWidth: 752 }}>
-      <ElectionItem elections={upcomingElections!} path="elections/upcoming/" />
+      <ElectionItem elections={ongoingElections!} path="elections/ongoing/" />
     </Box>
   );
 }

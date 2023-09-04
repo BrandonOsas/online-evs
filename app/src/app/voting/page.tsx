@@ -113,7 +113,7 @@ export default function Vote() {
           // Set the 'voters' property to an empty array for the ongoing election
           election.voters = []; // Add this line to initialize the 'voters' property
           // Move this election to the ongoing elections
-          set(ongoingRef, election);
+          set(ref(database, "elections/ongoing/" + key), election);
         } else {
           // Keep this election in the upcoming elections
           filteredElections[key] = election;

@@ -1,13 +1,20 @@
 "use client";
-import {
-  Box,
-  Button,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { NextLinkComposed } from "@/components/Link";
 import CountryPicker from "./portal/CountryPicker";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import LoadingButton from "@/components/LoadingButton";
+import { ArrowForwardIos } from "@mui/icons-material";
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const handleClick = () => {
+    void router.push("/portal");
+    setIsLoading(false);
+  };
   return (
     <main>
       <Box
@@ -34,13 +41,17 @@ export default function Home() {
           </Typography>
 
           <CountryPicker>
-            <Button
-              component={NextLinkComposed}
+            <LoadingButton
               variant="contained"
-              to="/portal"
-            >
-              Go to Portal
-            </Button>
+              label="Go to Portal"
+              isLoading={isLoading}
+              isLoadingText="Loading Portal"
+              onClick={() => {
+                setIsLoading(true);
+                handleClick()
+              }}
+              icon={<ArrowForwardIos/>}
+            />
           </CountryPicker>
         </Box>
       </Box>

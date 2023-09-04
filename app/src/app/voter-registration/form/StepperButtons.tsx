@@ -7,6 +7,7 @@ import { auth, database } from "../../../../firebase.config";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  updateProfile,
 } from "firebase/auth";
 import { NextLinkComposed } from "@/components/Link";
 
@@ -18,8 +19,8 @@ export default function StepperButtons() {
   const dispatch = useAppDispatch();
 
   const actionCodeSettings = {
-    // url: "http://localhost:3000/2FA-authentication/?email=" + data.email,
-    url: "http://localhost:3000/portal",
+    // url: "http://localhost:3000/2FA-authentication",
+    url: "http://online-evs.vercel.app/portal",
     handleCodeInApp: false,
   };
 
@@ -71,6 +72,17 @@ export default function StepperButtons() {
               data.email,
               token.password
             ).then(async (credential) => {
+              updateProfile(credential.user, {
+                displayName: data.lastname + " " + data.firstname,
+              })
+                .then(() => {
+                  // Profile updated!
+                  // ...
+                })
+                .catch((error) => {
+                  // An error occurred
+                  // ...
+                });
               dispatch(saveAuthUser(credential.user));
 
               // Save user to firebase database
