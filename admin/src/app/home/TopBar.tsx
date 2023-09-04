@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -15,9 +16,14 @@ export default function TopBar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Online EVS Admin Portal
           </Typography>
-          <Button color="inherit" onClick={() => {
-            signOut(auth)
-          }}>Logout</Button>
+          <Button
+            color="inherit"
+            onClick={() => {
+              signOut(auth);
+            }}
+          >
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
     </Box>

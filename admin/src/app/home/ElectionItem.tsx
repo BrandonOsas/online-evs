@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+"use client"
 import DeleteIcon from "@mui/icons-material/Delete";
 import UpcomingIcon from "@mui/icons-material/Upcoming";
 import BlockIcon from "@mui/icons-material/Block";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import EditIcon from "@mui/icons-material/Edit";
 import { Button, Typography, Box, Divider } from "@mui/material";
-import { onValue, ref, remove } from "firebase/database";
+import { ref, remove } from "firebase/database";
 import { database } from "../../../firebase.config";
 
 const getTitle = (id: string, state: string): string => {
