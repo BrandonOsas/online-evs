@@ -2,6 +2,7 @@
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 import { useTheme, Box, Tabs, Tab, Typography } from "@mui/material";
+//@ts-ignore
 import SwipeableViews from "react-swipeable-views";
 import NewElection from "./NewElection";
 import UpcomingElection from "./UpcomingElection";
