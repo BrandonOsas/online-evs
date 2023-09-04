@@ -1,9 +1,7 @@
 "use client";
 import * as React from "react";
 import { styled } from "@mui/material/styles";
-import { useTheme, Box, Tabs, Tab, Typography } from "@mui/material";
-//@ts-ignore
-import SwipeableViews from "react-swipeable-views";
+import { useTheme, Box, Tabs, Tab, Typography, Slide } from "@mui/material";
 import NewElection from "./NewElection";
 import UpcomingElection from "./UpcomingElection";
 import OngoingElection from "./OngoingElection";
@@ -14,7 +12,6 @@ interface StyledTabProps {
 
 interface TabPanelProps {
   children?: React.ReactNode;
-  dir?: string;
   index: number;
   value: number;
 }
@@ -63,18 +60,19 @@ const AntTab = styled((props: StyledTabProps) => (
 }));
 
 function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index } = props;
 
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
+    <Slide
+      in={value === index}
+      direction={value < index ? "left" : "right"}
+      timeout={500}
+      unmountOnExit
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
+      <div role="tabpanel" hidden={value !== index}>
+        {children}
+      </div>
+    </Slide>
   );
 }
 
@@ -84,10 +82,6 @@ export default function CustomizedTabs() {
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
-  };
-
-  const handleChangeIndex = (index: number) => {
-    setValue(index);
   };
 
   return (
@@ -102,28 +96,24 @@ export default function CustomizedTabs() {
         </AntTabs>
       </Box>
 
-      <SwipeableViews
-        axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-        index={value}
-        onChangeIndex={handleChangeIndex}
-      >
-        <TabPanel value={value} index={0} dir={theme.direction}>
-          <NewElection />
-        </TabPanel>
-        <TabPanel value={value} index={1} dir={theme.direction}>
-          <UpcomingElection />
-        </TabPanel>
-        <TabPanel value={value} index={2} dir={theme.direction}>
-          <OngoingElection />
-        </TabPanel>
-        <TabPanel value={value} index={2} dir={theme.direction}>
-          <Typography>No past elections found in the database at this time.</Typography>
-        </TabPanel>
-        <TabPanel value={value} index={2} dir={theme.direction}>
-          <OngoingElection />
-          <UpcomingElection />
-        </TabPanel>
-      </SwipeableViews>
+      <TabPanel value={value} index={0}>
+        <NewElection />
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <UpcomingElection />
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        <OngoingElection />
+      </TabPanel>
+      <TabPanel value={value} index={3}>
+        <Typography>
+          No past elections found in the database at this time.
+        </Typography>
+      </TabPanel>
+      <TabPanel value={value} index={4}>
+        <OngoingElection />
+        <UpcomingElection />
+      </TabPanel>
     </Box>
   );
 }
