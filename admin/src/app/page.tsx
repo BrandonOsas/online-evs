@@ -3,7 +3,7 @@ import { User, onAuthStateChanged } from "firebase/auth";
 import Tabs from "./home/Tabs";
 import { auth } from "../../firebase.config";
 import { Fragment, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import TopBar from "./home/TopBar";
 
 export default function Home() {

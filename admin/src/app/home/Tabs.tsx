@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { styled } from "@mui/material/styles";
-import { useTheme, Box, Tabs, Tab, Typography, Slide } from "@mui/material";
+import { Box, Tabs, Tab, Typography, Slide } from "@mui/material";
 import NewElection from "./NewElection";
 import UpcomingElection from "./UpcomingElection";
 import OngoingElection from "./OngoingElection";
@@ -78,7 +78,6 @@ function TabPanel(props: TabPanelProps) {
 
 export default function CustomizedTabs() {
   const [value, setValue] = React.useState(0);
-  const theme = useTheme();
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
