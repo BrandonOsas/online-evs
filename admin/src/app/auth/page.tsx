@@ -9,11 +9,12 @@ import {
   Typography,
 } from "@mui/material";
 import { useFormik } from "formik";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import * as yup from "yup";
 import { auth, database } from "../../../firebase.config";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { ref, child, get } from "firebase/database";
+
 
 const initialValues = {
   email: "",
@@ -26,7 +27,6 @@ const validationSchema = yup.object({
 });
 
 export default function SignIn() {
-  // const dispatch = useAppDispatch();
   const router = useRouter();
 
   const formik = useFormik({
@@ -49,11 +49,12 @@ export default function SignIn() {
               if (snapshot.exists()) {
                 console.log(snapshot.val());
 
-                const admins: { email: string }[] = snapshot.val();
+                const admins: { email: string; }[] = snapshot.val();
 
-                if (admins.filter((admin) => admin.email === user.email)) {
-                  void router.push("/");
+                if (admins.filter(admin => admin.email === user.email)) {
+                  router.push("/");
                 }
+
               } else {
                 console.log("No data available");
               }
@@ -61,6 +62,7 @@ export default function SignIn() {
             .catch((error) => {
               console.error(error);
             });
+
         });
       } catch (error) {
         // Handle the error here, e.g., show an error message
